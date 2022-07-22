@@ -1,0 +1,7 @@
+{
+	"name": "random-test-package-1234567890",
+	"version": "0.0.0",
+	"scripts": {
+		"start": "node index.js"
+	}
+}

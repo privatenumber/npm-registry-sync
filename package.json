@@ -1,0 +1,70 @@
+{
+	"name": "npm-registry-sync",
+	"version": "0.0.0-semantic-release",
+	"description": "A daemon that syncs npm registries",
+	"keywords": [
+		"npm",
+		"registry",
+		"sync",
+		"daemon",
+		"artifactory",
+		"enterprise",
+		"vpn",
+		"firewall"
+	],
+	"license": "MIT",
+	"repository": "privatenumber/npm-registry-sync",
+	"author": {
+		"name": "Hiroki Osame",
+		"email": "hiroki.osame@gmail.com"
+	},
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"bin": "./dist/cli.js",
+	"scripts": {
+		"build": "pkgroll",
+		"lint": "eslint .",
+		"pretest": "npm run build",
+		"test": "tsx tests",
+		"dev": "tsx watch tests",
+		"prepack": "clean-pkg-json"
+	},
+	"dependencies": {
+		"chainset": "^1.0.0",
+		"cleye": "^1.2.1",
+		"fs.promises.exists": "^1.1.3",
+		"got": "^12.1.0",
+		"ini": "^3.0.0",
+		"libnpmpublish": "^6.0.4",
+		"p-map": "^5.5.0",
+		"rc": "^1.2.8",
+		"reactive-json-file": "^2.0.0",
+		"semver": "^7.3.7",
+		"tasuku": "^2.0.0"
+	},
+	"devDependencies": {
+		"@pvtnbr/eslint-config": "^0.26.2",
+		"@types/ini": "^1.3.31",
+		"@types/libnpmpublish": "^4.0.3",
+		"@types/node": "^18.0.6",
+		"@types/rc": "^1.2.1",
+		"@types/semver": "^7.3.10",
+		"clean-pkg-json": "^1.0.0",
+		"eslint": "^8.20.0",
+		"execa": "^6.1.0",
+		"fs-fixture": "^1.1.0",
+		"jsonc-parser": "^3.1.0",
+		"manten": "^0.2.1",
+		"outdent": "^0.8.0",
+		"pkgroll": "^1.3.1",
+		"tsx": "^3.8.0",
+		"typescript": "^4.7.4",
+		"verdaccio": "^5.13.3",
+		"yaml": "^2.1.1"
+	},
+	"eslintConfig": {
+		"extends": "@pvtnbr"
+	}
+}
