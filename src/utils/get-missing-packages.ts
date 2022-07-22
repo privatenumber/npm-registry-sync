@@ -24,7 +24,10 @@ export const getMissingPackages = (
 			const packageInRegistry = packageName in currentRegistryPackages;
 
 			for (const [version, tarballPath] of Object.entries(versions)) {
-				if (!tarballPath || !tarballPath.startsWith('.')) {
+				if (!(
+					typeof tarballPath === 'string'
+					&& tarballPath.startsWith('.')
+				)) {
 					continue;
 				}
 

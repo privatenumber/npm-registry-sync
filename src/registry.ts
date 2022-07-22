@@ -105,12 +105,14 @@ class Registry {
 					versionsSorted.sort(([a], [b]) => semver.compare(a, b));
 
 					for (const [version, tarballPath] of versionsSorted) {
-						await this.publishTarball(
-							task,
-							packageName,
-							version,
-							path.join(packagesDirectoryPath, tarballPath),
-						);
+						if (typeof tarballPath === 'string') {
+							await this.publishTarball(
+								task,
+								packageName,
+								version,
+								path.join(packagesDirectoryPath, tarballPath),
+							);
+						}
 					}
 				}
 
@@ -279,21 +281,37 @@ class Registry {
 
 				this.meta.packages[packageName][version] = relativeTarballPath;
 			} catch (error) {
-				const { code } = error as any;
+				const { code, body } = error as any;
 
 				if (code) {
 					logger.error(this.id, `Failed to publish ${packageName}@${version}`, code);
 
-					if (code === 'EPUBLISHCONFLICT') {
+					if (code === 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY') {
+						return;
+					}
+
+					if (
+						code === 'EPUBLISHCONFLICT'
+						|| (
+							code === 'E403'
+							&& body?.reason?.startsWith('cannot modify pre-existing version:')
+						)
+					) {
 						const packageInfo = await getPackageInfo(this.got, packageName).catch(() => null);
 
 						if (packageInfo) {
 							const packageMeta = packageInfo.versions[version];
-							if (packageMeta && tarballPath.endsWith(`-${packageMeta.shasum}.tgz`)) {
-								this.meta.packages[packageName][version] = relativeTarballPath;
+
+							if (packageMeta) {
+								if (tarballPath.endsWith(`-${packageMeta.shasum}.tgz`)) {
+									this.meta.packages[packageName][version] = relativeTarballPath;
+								} else {
+									this.meta.packages[packageName][version] = packageMeta;
+								}
 								return;
 							}
 						}
+
 					}
 
 					this.meta.packages[packageName][version] = code;

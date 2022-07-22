@@ -1,6 +1,11 @@
+type RemoteAsset = {
+	tarball: string;
+	shasum: string;
+}
+
 export type PackagesManifest<Version = string | null> = {
 	[packageName: string]: {
-		[version: string]: Version;
+		[version: string]: Version | RemoteAsset;
 	};
 };
 
