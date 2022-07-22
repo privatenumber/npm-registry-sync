@@ -270,6 +270,7 @@ class Registry {
 					tarball,
 					{
 						...npmrc,
+						strictSSL: this.registryOptions.strictSSL,
 						npmVersion: `${packageJson.name}@${packageJson.version}`,
 						registry: this.registryOptions.url,
 						defaultTag: tag,
