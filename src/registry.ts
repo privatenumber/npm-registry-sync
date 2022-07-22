@@ -311,7 +311,6 @@ class Registry {
 								return;
 							}
 						}
-
 					}
 
 					this.meta.packages[packageName][version] = code;
