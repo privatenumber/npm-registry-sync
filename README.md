@@ -53,15 +53,15 @@ For example, given two private npm registries _A_ & _B_, where _A_ is currently 
 	npm whoami --registry <registry url>
 	```
 
-3. Start `npm-registries-sync`:
+3. Start `npm-registry-sync`:
 	```sh
-	npx npm-registries-sync
+	npx npm-registry-sync
 	```
 
 	Or run it in the background using [screen](https://linuxize.com/post/how-to-use-linux-screen/):
 
 	```sh
-	screen npx npm-registries-sync
+	screen npx npm-registry-sync
 	```
 
 ## Config schema
