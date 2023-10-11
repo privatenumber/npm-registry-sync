@@ -28,6 +28,8 @@ class Registry {
 
 	registryOptions: RegistryOptions;
 
+	npmrc: ReturnType<typeof getNpmrc>;
+
 	meta: RegistryMeta;
 
 	got: Got;
@@ -40,8 +42,16 @@ class Registry {
 	) {
 		this.id = id;
 		this.registryOptions = registryOptions;
+		this.npmrc = getNpmrc(this.registryOptions.npmrc);
+
+		const registryUrl = new URL(this.registryOptions.url);
+		const authTokenKey = Object.keys(this.npmrc).find(key => key.includes('_authToken') && key.includes(registryUrl.hostname + registryUrl.pathname));
+
 		this.got = got.extend({
 			prefixUrl: this.registryOptions.url,
+			headers: {
+				authorization: authTokenKey ? `Bearer ${this.npmrc[authTokenKey]}` : undefined,
+			},
 			https: {
 				rejectUnauthorized: this.registryOptions.strictSSL ?? true,
 			},
@@ -259,7 +269,6 @@ class Registry {
 			 * Only use 'latest' if its the latest version. Otherwise, use 'registry-sync'.
 			 */
 			const tag = versions[0] === version ? 'latest' : 'registry-sync';
-			const npmrc = getNpmrc(this.registryOptions.npmrc);
 			const tarball = await fs.promises.readFile(tarballPath);
 			const relativeTarballPath = tarballPath.replace(packagesDirectoryPath, '.');
 
@@ -271,7 +280,7 @@ class Registry {
 					},
 					tarball,
 					{
-						...npmrc,
+						...this.npmrc,
 						strictSSL: this.registryOptions.strictSSL,
 						npmVersion: `${packageJson.name}@${packageJson.version}`,
 						registry: this.registryOptions.url,
